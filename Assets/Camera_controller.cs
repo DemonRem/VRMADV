@@ -1,44 +1,48 @@
 ﻿using UnityEngine;
-using System.Collections;
- 
-public class Camera_controller : MonoBehaviour {
 
-  public float moveSpeed = 0.05f;
-  
-  private GameObject camera;
-  private Vector2[] beforePoint;
-  private Vector2[] nowPoint;
-  private Vector2[] diffpoint;
-  private float horizontalPosition;
-  private float varticalPosition;
-  void Start() { 
-    camera = Camera.main.gameObject;
-    beforePoint = new Vector2[2];
-    nowPoint = new Vector2[2];
-  }
- 
-  void Update () {
-    if(Input.touchCount > 0){ 
-      if(Input.GetTouch(1).phase == TouchPhase.Began){ //わからん
-        beforePoint[0] = Input.GetTouch(0).position;
-       beforePoint[1] = Input.GetTouch(1).position;
-     }
+public class Camera_controller : MonoBehaviour
+{
+    public float perspectiveZoomSpeed = 0.5f;        // 透視投影モードでの有効視野の変化の速さ
+    public float orthoZoomSpeed = 0.5f;        // 平行投影モードでの平行投影サイズの変化の速さ
 
-      if (Input.GetTouch(1).phase == TouchPhase.Moved){
-        nowPoint[0] = Input.GetTouch(0).position;
-        nowPoint[1] = Input.GetTouch(1).position;
 
-        if(nowPoint[0].x - beforePoint[0].x != 0){
-          horizontalPosition = nowPoint[0].x - beforePoint[0].x;
-          horizontalPosition *= moveSpeed * Time.deltaTime;
-          Vector3 direction = Quaternion.Euler(0, camera.transform.localEulerAngles.y, 0) * new Vector3(horizontalPosition, 0, 0) * (-1); //よくわからん
-          direction = transform.TransformDirection(direction); //わからん
-          camera.transform.position = new Vector3(camera.transform.position.x + direction.x, camera.transform.position.y + direction.y, camera.transform.position.z + direction.z);
+    void Update()
+    {
+        // 端末に 2 つのタッチがあるならば...　
+        if (Input.touchCount == 2)
+        {
+            // 両方のタッチを格納します
+            Touch touchZero = Input.GetTouch(0);
+            Touch touchOne = Input.GetTouch(1);
+
+            // 各タッチの前フレームでの位置をもとめます
+            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+            // 各フレームのタッチ間のベクター (距離) の大きさをもとめます
+            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+            // 各フレーム間の距離の差をもとめます
+            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+            // カメラが平行投影ならば...　
+            if (GetComponent<Camera>().orthographic)
+            {
+                // ... タッチ間の距離の変化に基づいて平行投影サイズを変更します
+                Camera.main.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
+
+                // 平行投影サイズが決して 0 未満にならないように気を付けてください
+                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize, 0.1f);
+            }
+            else
+            {
+                // そうでない場合は、タッチ間の距離の変化に基づいて有効視野を変更します
+                Camera.main.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
+
+                // 有効視野を 0 から 180 の間に固定するように気を付けてください
+                Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 0.1f, 179.9f);
+            }
         }
-        beforePoint[0] = nowPoint[0];
-        beforePoint[1] = nowPoint[1];
-      }
     }
-  }
-
 }
