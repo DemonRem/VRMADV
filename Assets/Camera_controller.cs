@@ -2,12 +2,15 @@
 
 public class Camera_controller : MonoBehaviour
 {
+    public GameObject VRM;
     public float perspectiveZoomSpeed = 0.5f;        // 透視投影モードでの有効視野の変化の速さ
     public float orthoZoomSpeed = 0.5f;        // 平行投影モードでの平行投影サイズの変化の速さ
 
 
-    void Update()
+    void LateUpdate()
     {
+        Vector3 aim = new Vector3(VRM.transform.position.x, (VRM.transform.position.y + 1.5f), VRM.transform.position.z);
+        transform.LookAt(aim);
         // 端末に 2 つのタッチがあるならば...　
         if (Input.touchCount == 2)
         {
@@ -41,7 +44,7 @@ public class Camera_controller : MonoBehaviour
                 Camera.main.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
 
                 // 有効視野を 0 から 180 の間に固定するように気を付けてください
-                Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 0.1f, 179.9f);
+                Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 10.0f, 100.0f);
             }
         }
     }

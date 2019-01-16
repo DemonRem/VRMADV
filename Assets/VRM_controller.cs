@@ -7,6 +7,7 @@ using VRM;
 
 public class VRM_controller : MonoBehaviour
 {
+    public GameObject obj;
     IEnumerator LoadVrmCoroutine(string path, Action<GameObject> onLoaded)
     {
         var www = new WWW(path);
@@ -22,6 +23,8 @@ public class VRM_controller : MonoBehaviour
         StartCoroutine(LoadVrmCoroutine(path, go =>
         {
             go.transform.position = new Vector3(0 ,0 ,0);
+            obj.GetComponent<Camera_controller>().VRM = GameObject.Find("VRM");
+
         }));
     }
    
