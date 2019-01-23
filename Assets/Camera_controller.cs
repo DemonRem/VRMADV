@@ -1,65 +1,72 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// The camera added this script will follow the specified object.
+/// The camera can be moved by left mouse drag and mouse wheel.
+/// </summary>
+[ExecuteInEditMode, DisallowMultipleComponent]
 public class Camera_controller : MonoBehaviour
 {
-    public GameObject VRM;
-    public float perspectiveZoomSpeed = 0.5f;        // 透視投影モードでの有効視野の変化の速さ
-    public float orthoZoomSpeed = 0.5f;        // 平行投影モードでの平行投影サイズの変化の速さ
-    private Vector3 aim;
+    public GameObject target; // an object to follow
+    public Vector3 offset; // offset form the target object
 
+    [SerializeField] private float distance = 4.0f; // distance from following object
+    [SerializeField] private float polarAngle = 45.0f; // angle with y-axis
+    [SerializeField] private float azimuthalAngle = 45.0f; // angle with x-axis
 
+    [SerializeField] private float minDistance = 1.0f;
+    [SerializeField] private float maxDistance = 7.0f;
+    [SerializeField] private float minPolarAngle = 5.0f;
+    [SerializeField] private float maxPolarAngle = 175.0f;
+    [SerializeField] private float mouseXSensitivity = 5.0f;
+    [SerializeField] private float mouseYSensitivity = 5.0f;
+    [SerializeField] private float scrollSensitivity = 5.0f;
+
+    public float height;
+    void Start()
+    {
+        offset = new Vector3(0, height / 2, 0);
+    }
     void LateUpdate()
     {
-        if(VRM != null){
-            aim = new Vector3(VRM.transform.position.x, VRM.transform.position.y + 1, VRM.transform.position.z);
-            // 端末に 1以上のタッチがあるならば...　
-            if (Input.touchCount >= 1)
-            {
+        if(target != null){
+            if (Input.touchCount >= 1) {
                 Touch touchZero = Input.GetTouch(0);
-
-                if(Input.touchCount == 1){
-                    // 両方のタッチを格納します
-                    
-
-                    // 各タッチの前フレームでの位置をもとめます
-
-                    if(touchZero.phase == TouchPhase.Moved){
-                        Vector3 axis = transform.TransformDirection(0, touchZero.deltaPosition.x, 0);
-                        transform.RotateAround(aim, axis, 100.0f * Time.deltaTime);
-                        axis = transform.TransformDirection(0 - touchZero.deltaPosition.y, 0, 0);
-                        transform.RotateAround(aim, axis, 100.0f * Time.deltaTime);
-                    }
-                }
-                if(Input.touchCount ==2){
-                    Touch touchOne = Input.GetTouch(1);
-                    Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-                    Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-                    // 各フレームのタッチ間のベクター (距離) の大きさをもとめます
-                    float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-                    float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-
-                    // 各フレーム間の距離の差をもとめます
-                    float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-                    // カメラが平行投影ならば...　
-                    if (GetComponent<Camera>().orthographic)
-                    {
-                        // ... タッチ間の距離の変化に基づいて平行投影サイズを変更します
-                        Camera.main.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
-
-                        // 平行投影サイズが決して 0 未満にならないように気を付けてください
-                        Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize, 0.1f);
-                    }
-                    else
-                    {
-                        // そうでない場合は、タッチ間の距離の変化に基づいて有効視野を変更します
-                        Camera.main.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
-
-                        // 有効視野を 0 から 180 の間に固定するように気を付けてください
-                        Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 10.0f, 100.0f);
-                    }
+                if(touchZero.phase == TouchPhase.Moved){
+                    Vector2 Fluctuation = new Vector2(touchZero.deltaPosition.x * Time.deltaTime, touchZero.deltaPosition.y * Time.deltaTime);
+                    updateAngle(Fluctuation.x, Fluctuation.y);
                 }
             }
+            //updateDistance(Input.GetAxis("Mouse ScrollWheel"));
+
+            var lookAtPos = target.transform.position + offset;
+            updatePosition(lookAtPos);
+            transform.LookAt(lookAtPos);
         }
+    }
+
+    void updateAngle(float x, float y)
+    {
+        x = azimuthalAngle - x * mouseXSensitivity;
+        azimuthalAngle = Mathf.Repeat(x, 360);
+
+        y = polarAngle + y * mouseYSensitivity;
+        polarAngle = Mathf.Clamp(y, minPolarAngle, maxPolarAngle);
+    }
+
+    void updateDistance(float scroll)
+    {
+        scroll = distance - scroll * scrollSensitivity;
+        distance = Mathf.Clamp(scroll, minDistance, maxDistance);
+    }
+
+    void updatePosition(Vector3 lookAtPos)
+    {
+        var da = azimuthalAngle * Mathf.Deg2Rad;
+        var dp = polarAngle * Mathf.Deg2Rad;
+        transform.position = new Vector3(
+            lookAtPos.x + distance * Mathf.Sin(dp) * Mathf.Cos(da),
+            lookAtPos.y + distance * Mathf.Cos(dp),
+            lookAtPos.z + distance * Mathf.Sin(dp) * Mathf.Sin(da));
     }
 }
