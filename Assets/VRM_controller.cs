@@ -25,10 +25,6 @@ public class VRM_controller : MonoBehaviour
             go.transform.position = new Vector3(0 ,0 ,0);
             GameObject VRM = GameObject.Find("VRM");
             obj.GetComponent<Camera_controller>().target = VRM;
-            VRM.AddComponent<RectTransform>();
-            obj.GetComponent<Camera_controller>().height = VRM.GetComponent<RectTransform>().sizeDelta.y;
-            Debug.Log(VRM.GetComponent<RectTransform>().sizeDelta.y);
-
         }));
     }
    

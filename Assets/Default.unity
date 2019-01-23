@@ -286,17 +286,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  offset: {x: 0, y: 1.5, z: 0}
+  offset: {x: 0, y: 0, z: 0}
   distance: 4
   polarAngle: 45
   azimuthalAngle: 45
   minDistance: 1
   maxDistance: 7
   minPolarAngle: 5
-  maxPolarAngle: 75
+  maxPolarAngle: 175
   mouseXSensitivity: 5
   mouseYSensitivity: 5
   scrollSensitivity: 5
+  height: 0
 --- !u!1 &1119318425
 GameObject:
   m_ObjectHideFlags: 0
