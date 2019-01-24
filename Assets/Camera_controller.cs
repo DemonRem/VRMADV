@@ -8,13 +8,13 @@
 public class Camera_controller : MonoBehaviour
 {
     public GameObject target; // an object to follow
-    public Vector3 offset = new Vector3(0, 0.5f, 0); // offset form the target object
+    public Vector3 offset = new Vector3(0, 1.0f, 0); // offset form the target object
 
-    [SerializeField] private float distance = 4.0f; // distance from following object
-    [SerializeField] private float polarAngle = 45.0f; // angle with y-axis
-    [SerializeField] private float azimuthalAngle = 45.0f; // angle with x-axis
+    public float distance = 2.0f; // distance from following object
+    public float polarAngle = 90.0f; // angle with y-axis
+    public float azimuthalAngle = 90.0f; // angle with x-axis
 
-    [SerializeField] private float minDistance = 1.0f;
+    [SerializeField]private float minDistance = 1.0f;
     [SerializeField] private float maxDistance = 4.0f;
     [SerializeField] private float minPolarAngle = 5.0f;
     [SerializeField] private float maxPolarAngle = 175.0f;
