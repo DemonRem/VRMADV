@@ -375,10 +375,10 @@ namespace UniGLTF
 
             for (int i = 0; i < GLTF.textures.Count; ++i)
             {
-                var image = GLTF.GetImageFromTextureIndex(i);
 
                 TextureItem item = null;
 #if UNITY_EDITOR
+                var image = GLTF.GetImageFromTextureIndex(i);
                 if (imageBaseDir.IsUnderAssetsFolder
                     && !string.IsNullOrEmpty(image.uri)
                     && !image.uri.StartsWith("data:")
@@ -667,7 +667,10 @@ namespace UniGLTF
                 }
 
                 // connect root
-                Root = new GameObject("_root_");
+                if (Root == null)
+                {
+                    Root = new GameObject("_root_");
+                }
                 foreach (var x in GLTF.rootnodes)
                 {
                     var t = nodes[x].Transform;
