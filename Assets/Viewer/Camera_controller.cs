@@ -14,7 +14,7 @@ public class Camera_controller : MonoBehaviour
     public float polarAngle = 90.0f; // angle with y-axis
     public float azimuthalAngle = 90.0f; // angle with x-axis
 
-    [SerializeField]private float minDistance = 1.0f;
+    [SerializeField] private float minDistance = 1.0f;
     [SerializeField] private float maxDistance = 4.0f;
     [SerializeField] private float minPolarAngle = 5.0f;
     [SerializeField] private float maxPolarAngle = 175.0f;
