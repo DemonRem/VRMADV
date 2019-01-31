@@ -6,9 +6,16 @@ using UnityEngine.Networking;
 using UniRx.Async;
 using VRM;
 public class VRM_reading : MonoBehaviour
-{
+{  
+    public GameObject Canvas;
+    public GameObject ButtonPrefab;
+    private GameObject ButtonNow;
+
     async UniTask Start(){
         Debug.Log("Start"); 
+        Vector2 CanvasSize = Canvas.GetComponent<RectTransform>().sizeDelta;
+        Debug.Log(CanvasSize.x + ":" + CanvasSize.y);
+
         DirectoryCheck();
         string[] AvaterPath = DefaultAvaterPath();
         foreach (string check in AvaterPath)
@@ -23,6 +30,11 @@ public class VRM_reading : MonoBehaviour
         DirectoryInfo dir = new DirectoryInfo(Application.persistentDataPath + "/" + "ModelData");
         FileInfo[] info = dir.GetFiles("*.vrm");
         int count = 0;
+        int margin = 90;
+        var ButtonSize =  (CanvasSize.x - margin * 3) / 2;
+        Debug.Log(ButtonSize);
+        
+
         foreach(FileInfo f in info)
         {
 #if UNITY_EDITOR
@@ -32,6 +44,19 @@ public class VRM_reading : MonoBehaviour
             Sprite sprite = await GetMetaData("file://" + Application.persistentDataPath + "/ModelData/" + f.Name);
 #endif
 
+            ButtonNow = Instantiate(ButtonPrefab) as GameObject;
+            ButtonNow.transform.SetParent(Canvas.transform);
+            ButtonNow.name = "Button" + count;
+            ButtonNow.GetComponent<RectTransform>().sizeDelta = new Vector2(ButtonSize, ButtonSize);
+
+            if(count % 2 == 0){
+                ButtonNow.GetComponent<RectTransform>().anchoredPosition = new Vector2((margin + ButtonSize / 2), - margin - ((ButtonSize + margin) * (count / 2)) - (ButtonSize / 2));
+                ButtonNow.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            }
+            else{
+                ButtonNow.GetComponent<RectTransform>().anchoredPosition = new Vector2((margin * 2 + ButtonSize * 1.5f), - margin - ((ButtonSize + margin) * ((count - 1) / 2)) - (ButtonSize / 2));
+                ButtonNow.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            }
             GameObject.Find("Button" + count).GetComponent<Image>().sprite = sprite;
             count++;
         }
@@ -100,7 +125,7 @@ public class VRM_reading : MonoBehaviour
 
     public string[] DefaultAvaterPath()
     {
-        int AvaterNum = 2;
+        int AvaterNum = 3;
         string[] AvaterPath = new string[AvaterNum];
         for(int num = 0; num < AvaterNum; num++)
         {
