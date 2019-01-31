@@ -7,7 +7,6 @@ using UniRx.Async;
 using VRM;
 public class VRM_reading : MonoBehaviour
 {
-    public GameObject Thumbnail;
     async UniTask Start(){
         Debug.Log("Start"); 
         DirectoryCheck();
@@ -26,8 +25,14 @@ public class VRM_reading : MonoBehaviour
         int count = 0;
         foreach(FileInfo f in info)
         {
-            Sprite sprite = await GetMetaData(Application.persistentDataPath + "/" + "ModelData" + f.Name);
-            GameObject.Find("Image" + count).GetComponent<Image>().sprite = sprite;
+#if UNITY_EDITOR
+            Sprite sprite = await GetMetaData(Application.persistentDataPath + "/ModelData/" + f.Name);
+
+#elif UNITY_ANDROID
+            Sprite sprite = await GetMetaData("file://" + Application.persistentDataPath + "/ModelData/" + f.Name);
+#endif
+
+            GameObject.Find("Button" + count).GetComponent<Image>().sprite = sprite;
             count++;
         }
 
@@ -59,6 +64,7 @@ public class VRM_reading : MonoBehaviour
 
     public async UniTask<VRMMetaObject> LoadAvater(string path)
     {
+        Debug.Log(path);
         var uwr = UnityWebRequest.Get(path);
         await uwr.SendWebRequest();
         Debug.Log("Bytes:" + uwr.downloadedBytes);
