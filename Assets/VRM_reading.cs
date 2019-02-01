@@ -8,14 +8,15 @@ using VRM;
 public class VRM_reading : MonoBehaviour
 {  
     public GameObject Canvas;
+    public GameObject Content;
+    public GameObject ScrollView;
     public GameObject ButtonPrefab;
     private GameObject ButtonNow;
+    private int count = 0;
+    private int margin = 90;
+    private int AvaterNum = 3;
 
     async UniTask Start(){
-        Debug.Log("Start"); 
-        Vector2 CanvasSize = Canvas.GetComponent<RectTransform>().sizeDelta;
-        Debug.Log(CanvasSize.x + ":" + CanvasSize.y);
-
         DirectoryCheck();
         string[] AvaterPath = DefaultAvaterPath();
         foreach (string check in AvaterPath)
@@ -29,53 +30,55 @@ public class VRM_reading : MonoBehaviour
         
         DirectoryInfo dir = new DirectoryInfo(Application.persistentDataPath + "/" + "ModelData");
         FileInfo[] info = dir.GetFiles("*.vrm");
-        int count = 0;
-        int margin = 90;
-        var ButtonSize =  (CanvasSize.x - margin * 3) / 2;
-        Debug.Log(ButtonSize);
-        
+
+        ButtonLayout();       
 
         foreach(FileInfo f in info)
         {
+
 #if UNITY_EDITOR
             Sprite sprite = await GetMetaData(Application.persistentDataPath + "/ModelData/" + f.Name);
-
 #elif UNITY_ANDROID
             Sprite sprite = await GetMetaData("file://" + Application.persistentDataPath + "/ModelData/" + f.Name);
 #endif
-
-            ButtonNow = Instantiate(ButtonPrefab) as GameObject;
-            ButtonNow.transform.SetParent(Canvas.transform);
-            ButtonNow.name = "Button" + count;
-            ButtonNow.GetComponent<RectTransform>().sizeDelta = new Vector2(ButtonSize, ButtonSize);
-
-            if(count % 2 == 0){
-                ButtonNow.GetComponent<RectTransform>().anchoredPosition = new Vector2((margin + ButtonSize / 2), - margin - ((ButtonSize + margin) * (count / 2)) - (ButtonSize / 2));
-                ButtonNow.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-            }
-            else{
-                ButtonNow.GetComponent<RectTransform>().anchoredPosition = new Vector2((margin * 2 + ButtonSize * 1.5f), - margin - ((ButtonSize + margin) * ((count - 1) / 2)) - (ButtonSize / 2));
-                ButtonNow.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-            }
+            
+            ButtonCreate(count);
             GameObject.Find("Button" + count).GetComponent<Image>().sprite = sprite;
             count++;
         }
 
     }
 
+    public void ButtonLayout()
+    {
+        Vector2 CanvasSize = Canvas.GetComponent<RectTransform>().sizeDelta;
+        var ButtonSize =  (CanvasSize.x - margin * 3) / 2;
+        ScrollView.GetComponent<RectTransform>().sizeDelta = CanvasSize;
+        Content.GetComponent<GridLayoutGroup>().padding.left = margin;
+        Content.GetComponent<GridLayoutGroup>().padding.top = margin;
+        Content.GetComponent<GridLayoutGroup>().padding.bottom = margin;
+        Content.GetComponent<GridLayoutGroup>().cellSize = new Vector2(ButtonSize, ButtonSize);
+        Content.GetComponent<GridLayoutGroup>().spacing = new Vector2(margin, margin); 
+    }
+
+    public void ButtonCreate(int count)
+    {
+        ButtonNow = Instantiate(ButtonPrefab) as GameObject;
+        ButtonNow.transform.SetParent(Content.transform);
+        ButtonNow.name = "Button" + count;
+        ButtonNow.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+    }
+
     public void DirectoryCheck()
     {
         if (!(Directory.Exists(Application.persistentDataPath + "/" + "ModelData")))
         {
-            Debug.Log("ディレクトリなし");
             Directory.CreateDirectory(Application.persistentDataPath + "/" + "ModelData");
-            Debug.Log("ディレクトリ作成");
         }
     }
 
     public async UniTask<Sprite> GetMetaData(string path)
     {
-        Debug.Log("メタデータ取得開始");
         var data = await LoadAvater(path);
         Debug.Log("Loaded");
         var tex = data.Thumbnail;
@@ -107,7 +110,6 @@ public class VRM_reading : MonoBehaviour
 
     public async UniTask CopyAvater(string path,string model)
     {
-        Debug.Log("モデル読み込み開始");
         var uwr = UnityWebRequest.Get(path);
         await uwr.SendWebRequest();
         Debug.Log("Bytes:" + uwr.downloadedBytes);
@@ -120,18 +122,15 @@ public class VRM_reading : MonoBehaviour
         byte[] bytes = uwr.downloadHandler.data;
         string topath =  Application.persistentDataPath + "/" + "ModelData" + "/" + model;
         File.WriteAllBytes(topath, bytes);
-        Debug.Log("コピー成功");
     }
 
     public string[] DefaultAvaterPath()
     {
-        int AvaterNum = 3;
         string[] AvaterPath = new string[AvaterNum];
         for(int num = 0; num < AvaterNum; num++)
         {
             AvaterPath[num] = "model" + num +".vrm";
         }
-        Debug.Log("pathの出力に成功");
         return AvaterPath;
 
     }
