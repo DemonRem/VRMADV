@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Viewer/Viewer.unity
     guid: 952b1cb186b308a4c980f0ea17480258
-  - enabled: 1
+  - enabled: 0
     path: Assets/read.unity
     guid: dca3decfab4f349418e03d792a8eae83
+  - enabled: 1
+    path: Assets/Oculus.unity
+    guid: f64244844da8ad147b8f9074d2b76859
   m_configObjects: {}

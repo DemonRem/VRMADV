@@ -20,7 +20,7 @@ public class VRM_controller : MonoBehaviour
 
     void Start()
     {
-        var path = Application.streamingAssetsPath + "/" + "model.vrm";
+        var path = Application.streamingAssetsPath + "/" + "model0.vrm";
 
         StartCoroutine(roadVRM(path, go =>
         {
