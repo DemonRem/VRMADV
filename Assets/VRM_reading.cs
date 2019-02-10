@@ -31,15 +31,15 @@ public class VRM_reading : MonoBehaviour
         DirectoryInfo dir = new DirectoryInfo(Application.persistentDataPath + "/" + "ModelData");
         FileInfo[] info = dir.GetFiles("*.vrm");
 
-        ButtonLayout();       
+        ButtonLayout();
+        var converter =  new ByteToVRMConverter();       
 
         foreach(FileInfo f in info)
         {
-
 #if UNITY_EDITOR
-            Sprite sprite = await GetMetaData(Application.persistentDataPath + "/ModelData/" + f.Name);
+            Sprite sprite = await converter.GetMetaData(Application.persistentDataPath + "/ModelData/" + f.Name);
 #elif UNITY_ANDROID
-            Sprite sprite = await GetMetaData("file://" + Application.persistentDataPath + "/ModelData/" + f.Name);
+            Sprite sprite = await converter.GetMetaData("file://" + Application.persistentDataPath + "/ModelData/" + f.Name);
 #endif
             
             ButtonCreate(count);
@@ -77,36 +77,6 @@ public class VRM_reading : MonoBehaviour
         }
     }
 
-    public async UniTask<Sprite> GetMetaData(string path)
-    {
-        var data = await LoadAvater(path);
-        Debug.Log("Loaded");
-        var tex = data.Thumbnail;
-        Sprite sprite = Sprite.Create(
-           texture : tex,
-            rect : new Rect(0, 0, tex.width, tex.height),
-            pivot : new Vector2(0.5f, 0.5f) 
-        );
-        return sprite; 
-    }
-
-    public async UniTask<VRMMetaObject> LoadAvater(string path)
-    {
-        Debug.Log(path);
-        var uwr = UnityWebRequest.Get(path);
-        await uwr.SendWebRequest();
-        Debug.Log("Bytes:" + uwr.downloadedBytes);
-
-        if(uwr.isNetworkError || uwr.isHttpError)
-        {
-            throw new Exception("Cannnot local file:" + path);
-        }
-
-        byte[] bytes = uwr.downloadHandler.data;
-        var context = new VRMImporterContext();
-        context.ParseGlb(bytes);
-        return context.ReadMeta(true); 
-    }
 
     public async UniTask CopyAvater(string path,string model)
     {
@@ -132,6 +102,44 @@ public class VRM_reading : MonoBehaviour
             AvaterPath[num] = "model" + num +".vrm";
         }
         return AvaterPath;
+
+    }
+}
+public class ByteToVRMConverter :IDisposable
+{
+    public async UniTask<Sprite> GetMetaData(string path)
+    {
+        var data = await LoadAvater(path);
+        Debug.Log("Loaded");
+        var tex = data.Thumbnail;
+        Sprite sprite = Sprite.Create(
+        texture : tex,
+            rect : new Rect(0, 0, tex.width, tex.height),
+            pivot : new Vector2(0.5f, 0.5f) 
+        );
+        return sprite; 
+    }
+
+    public async UniTask<VRMMetaObject> LoadAvater(string path)
+    {
+        Debug.Log(path);
+        var uwr = UnityWebRequest.Get(path);
+        await uwr.SendWebRequest();
+        Debug.Log("Bytes:" + uwr.downloadedBytes);
+
+        if(uwr.isNetworkError || uwr.isHttpError)
+        {
+            throw new Exception("Cannnot local file:" + path);
+        }
+
+        byte[] bytes = uwr.downloadHandler.data;
+        var context = new VRMImporterContext();
+        context.ParseGlb(bytes);
+        return context.ReadMeta(true); 
+    }
+
+    public void Dispose()
+    {
 
     }
 }

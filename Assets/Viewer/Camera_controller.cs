@@ -7,12 +7,12 @@
 [ExecuteInEditMode, DisallowMultipleComponent]
 public class Camera_controller : MonoBehaviour
 {
-    public GameObject target; // an object to follow
-    public Vector3 offset = new Vector3(0, 1.0f, 0); // offset form the target object
+    public GameObject target;
+    public Vector3 offset = new Vector3(0, 1.0f, 0);
 
-    public float distance = 2.0f; // distance from following object
-    public float polarAngle = 90.0f; // angle with y-axis
-    public float azimuthalAngle = 90.0f; // angle with x-axis
+    public float distance = 2.0f;
+    public float polarAngle = 90.0f;
+    public float azimuthalAngle = 90.0f;
 
     [SerializeField] private float minDistance = 1.0f;
     [SerializeField] private float maxDistance = 4.0f;
@@ -36,7 +36,6 @@ public class Camera_controller : MonoBehaviour
                 Touch touchOne = Input.GetTouch(1);
                 updateDistance(touchOne, touchZero);
             }
-            //updateDistance(Input.GetAxis("Mouse ScrollWheel"));
 
             var lookAtPos = target.transform.position + offset;
             updatePosition(lookAtPos);
@@ -73,6 +72,7 @@ public class Camera_controller : MonoBehaviour
         transform.position = new Vector3(
             lookAtPos.x + distance * Mathf.Sin(dp) * Mathf.Cos(da),
             lookAtPos.y + distance * Mathf.Cos(dp),
-            lookAtPos.z + distance * Mathf.Sin(dp) * Mathf.Sin(da));
+            lookAtPos.z + distance * Mathf.Sin(dp) * Mathf.Sin(da)
+        );
     }
 }
