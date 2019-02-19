@@ -36,9 +36,16 @@ public class VRM_reading : MonoBehaviour
 
         foreach(FileInfo f in info)
         {
-            Sprite sprite = await converter.GetMetaData(Application.persistentDataPath + "/ModelData/" + f.Name);            
+            VRMMetaObject data = await converter.GetMetaData(Application.persistentDataPath + "/ModelData/" + f.Name);            
+            Sprite sprite = Sprite.Create(
+                texture : data.Thumbnail,
+                rect : new Rect(0, 0, data.Thumbnail.width, data.Thumbnail.height),
+                pivot : new Vector2(0.5f, 0.5f) 
+            );
             ButtonCreate(count);
-            GameObject.Find("Button" + count).GetComponent<Image>().sprite = sprite;
+            GameObject obj  = GameObject.Find("Button" + count);
+            obj.GetComponent<Image>().sprite = sprite;
+            obj.GetComponent<VRMMeta>().Meta = data;
             count++;
         }
 
@@ -49,11 +56,12 @@ public class VRM_reading : MonoBehaviour
         Vector2 CanvasSize = Canvas.GetComponent<RectTransform>().sizeDelta;
         var ButtonSize =  (CanvasSize.x - margin * 3) / 2;
         ScrollView.GetComponent<RectTransform>().sizeDelta = CanvasSize;
-        Content.GetComponent<GridLayoutGroup>().padding.left = margin;
-        Content.GetComponent<GridLayoutGroup>().padding.top = margin;
-        Content.GetComponent<GridLayoutGroup>().padding.bottom = margin;
-        Content.GetComponent<GridLayoutGroup>().cellSize = new Vector2(ButtonSize, ButtonSize);
-        Content.GetComponent<GridLayoutGroup>().spacing = new Vector2(margin, margin); 
+        GridLayoutGroup Layout = Content.GetComponent<GridLayoutGroup>();
+        Layout.padding.left = margin;
+        Layout.padding.top = margin;
+        Layout.padding.bottom = margin;
+        Layout.cellSize = new Vector2(ButtonSize, ButtonSize);
+        Layout.spacing = new Vector2(margin, margin); 
     }
 
     public void ButtonCreate(int count)
@@ -102,18 +110,12 @@ public class VRM_reading : MonoBehaviour
 }
 public class ByteToVRMConverter :IDisposable
 {
-    public async UniTask<Sprite> GetMetaData(string path)
+    public async UniTask<VRMMetaObject> GetMetaData(string path)
     {
         Debug.Log("LoadStart");
         var data = await VRMMetaImporter.ImportVRMMeta(path, true);
         Debug.Log("Loaded");
-        var tex = data.Thumbnail;
-        Sprite sprite = Sprite.Create(
-        texture : tex,
-            rect : new Rect(0, 0, tex.width, tex.height),
-            pivot : new Vector2(0.5f, 0.5f) 
-        );
-        return sprite; 
+        return data; 
     }
 
     public void Dispose()
