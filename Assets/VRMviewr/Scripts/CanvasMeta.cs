@@ -10,6 +10,8 @@ public class CanvasMeta : MonoBehaviour
     public GameObject Thumnail;
     public GameObject Title;
     public GameObject Author;
+    public GameObject Version;
+    public GameObject ExporterVersion;
     public GameObject Personality_LICENCE;
     public GameObject Violent_LICENCE;
     public GameObject Sexual_LICENCE;
@@ -27,6 +29,8 @@ public class CanvasMeta : MonoBehaviour
         Thumnail.GetComponent<Image>().sprite = sprite;
         Title.GetComponent<Text>().text = Meta.Title;
         Author.GetComponent<Text>().text = Meta.Author;
+        Version.GetComponent<Text>().text = Meta.Version;
+        ExporterVersion.GetComponent<Text>().text = Meta.ExporterVersion;
         Personality_LICENCE.GetComponent<Text>().text = Meta.AllowedUser.ToString();
         Violent_LICENCE.GetComponent<Text>().text = Meta.ViolentUssage.ToString();
         Sexual_LICENCE.GetComponent<Text>().text = Meta.SexualUssage.ToString();
