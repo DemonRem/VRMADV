@@ -35,20 +35,29 @@ public class VRM_reading : MonoBehaviour
         var converter =  new ByteToVRMConverter();       
 
         foreach(FileInfo f in info)
-        {
-            VRMMetaObject data = await converter.GetMetaData(Application.persistentDataPath + "/ModelData/" + f.Name);            
-            Sprite sprite = Sprite.Create(
-                texture : data.Thumbnail,
-                rect : new Rect(0, 0, data.Thumbnail.width, data.Thumbnail.height),
-                pivot : new Vector2(0.5f, 0.5f) 
-            );
-            ButtonCreate(count);
-            GameObject obj  = GameObject.Find("Button" + count);
-            obj.GetComponent<Image>().sprite = sprite;
-            obj.GetComponent<VRMMeta>().Meta = data;
-            count++;
+        {   string path = Application.persistentDataPath + "/ModelData/" + f.Name;
+            VRMMetaObject data = await converter.GetMetaData(path);
+            Debug.Log(path);
+            if(data.Thumbnail != null){
+                Sprite sprite = Sprite.Create(
+                    texture : data.Thumbnail,
+                    rect : new Rect(0, 0, data.Thumbnail.width, data.Thumbnail.height),
+                    pivot : new Vector2(0.5f, 0.5f) 
+                );
+                ButtonCreate(count,f.Name);
+                GameObject obj  = GameObject.Find("Button" + count);
+                obj.GetComponent<Image>().sprite = sprite;
+                obj.GetComponent<VRMMeta>().Meta = data;
+                count++;
+            } else {
+                Sprite sprite = null;
+                ButtonCreate(count,f.Name);
+                GameObject obj  = GameObject.Find("Button" + count);
+                obj.GetComponent<Image>().sprite = sprite;
+                obj.GetComponent<VRMMeta>().Meta = data;
+                count++;
+            }
         }
-
     }
 
     public void ButtonLayout()
@@ -64,12 +73,13 @@ public class VRM_reading : MonoBehaviour
         Layout.spacing = new Vector2(margin, margin); 
     }
 
-    public void ButtonCreate(int count)
+    public void ButtonCreate(int count, string path)
     {
         ButtonNow = Instantiate(ButtonPrefab) as GameObject;
         ButtonNow.transform.SetParent(Content.transform);
         ButtonNow.name = "Button" + count;
         ButtonNow.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        ButtonNow.GetComponent<VRMPath>().Path = path;
     }
 
     public void DirectoryCheck()

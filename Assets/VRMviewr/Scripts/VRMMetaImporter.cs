@@ -39,7 +39,7 @@ public class VRMMetaImporter
         using (FileStream SourceStream = File.Open(path, FileMode.Open))
         {
             var length = SourceStream.Length;
-
+            Debug.Log(length);
             if (length == 0)
             {
                 throw new Exception("empty bytes");

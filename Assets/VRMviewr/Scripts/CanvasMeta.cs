@@ -21,12 +21,17 @@ public class CanvasMeta : MonoBehaviour
     {
 
         VRMMetaObject Meta = gameObject.GetComponent<VRMMeta>().Meta;
-        Sprite sprite = Sprite.Create(
-            texture : Meta.Thumbnail,
-            rect : new Rect(0, 0, Meta.Thumbnail.width, Meta.Thumbnail.height),
-            pivot : new Vector2(0.5f, 0.5f) 
-        );
-        Thumnail.GetComponent<Image>().sprite = sprite;
+        if(Meta.Thumbnail != null){
+            Sprite sprite = Sprite.Create(
+                texture : Meta.Thumbnail,
+                rect : new Rect(0, 0, Meta.Thumbnail.width, Meta.Thumbnail.height),
+                pivot : new Vector2(0.5f, 0.5f) 
+            );
+            Thumnail.GetComponent<Image>().sprite = sprite;
+        } else {
+            Sprite sprite = null;
+            Thumnail.GetComponent<Image>().sprite = sprite;
+        }
         Title.GetComponent<Text>().text = Meta.Title;
         Author.GetComponent<Text>().text = Meta.Author;
         Version.GetComponent<Text>().text = Meta.Version;
