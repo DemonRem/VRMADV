@@ -24,7 +24,10 @@ public class VRM_controller : MonoBehaviour
         var go = await VRMImporter.LoadVrmAsync(www.bytes);
 
         go.transform.position = new Vector3(0, -1, 0);
-        obj.GetComponent<Camera_controller>().target = go;
+        Camera_controller CameraController = obj.GetComponent<Camera_controller>();
+        Animator humanoid = go.GetComponent<Animator>();
+        CameraController.offset = humanoid.GetBoneTransform(HumanBodyBones.Spine).position;
+        CameraController.target = go;
 
     }
 }

@@ -8,7 +8,7 @@
 public class Camera_controller : MonoBehaviour
 {
     public GameObject target;
-    public Vector3 offset = new Vector3(0, 1.0f, 0);
+    public Vector3 offset;
 
     public float distance = 2.0f;
     public float polarAngle = 90.0f;
@@ -37,7 +37,7 @@ public class Camera_controller : MonoBehaviour
                 updateDistance(touchOne, touchZero);
             }
 
-            var lookAtPos = target.transform.position + offset;
+            var lookAtPos = offset;
             updatePosition(lookAtPos);
             transform.LookAt(lookAtPos);
         }
