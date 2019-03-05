@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/VRMviewr/Scenes/read.unity
+    path: Assets/VRMADV/Scenes/read.unity
     guid: dca3decfab4f349418e03d792a8eae83
   - enabled: 1
-    path: Assets/VRMviewr/Scenes/Viewer.unity
+    path: Assets/VRMADV/Scenes/Viewer.unity
     guid: 952b1cb186b308a4c980f0ea17480258
   - enabled: 0
     path: 
