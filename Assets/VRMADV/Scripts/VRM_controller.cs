@@ -14,6 +14,7 @@ public class VRM_controller : MonoBehaviour
         var fileName = GameObject.Find("VRMPath").GetComponent<DontDestroy>().Path;
 #if UNITY_EDITOR
         var path = Application.persistentDataPath + "/ModelData/" + fileName;
+        //var path = Application.persistentDataPath + "/ModelData/model0.vrm";
 #elif UNITY_ANDROID
         var path = "file://"+ Application.persistentDataPath + "/ModelData/" + fileName;
 #endif
