@@ -62,7 +62,8 @@ public class VRM_reading : MonoBehaviour
 
     public void ButtonLayout()
     {
-        Vector2 CanvasSize = Canvas.GetComponent<RectTransform>().sizeDelta;
+        Vector2 CanvasSize = new Vector2(Screen.width, Screen.height);
+        Canvas.GetComponent<RectTransform>().sizeDelta = CanvasSize;
         var ButtonSize =  (CanvasSize.x - margin * 3) / 2;
         ScrollView.GetComponent<RectTransform>().sizeDelta = CanvasSize;
         GridLayoutGroup Layout = Content.GetComponent<GridLayoutGroup>();

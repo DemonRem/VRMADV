@@ -18,9 +18,10 @@ public class Camera_controller : MonoBehaviour
     [SerializeField] private float maxDistance = 4.0f;
     [SerializeField] private float minPolarAngle = 5.0f;
     [SerializeField] private float maxPolarAngle = 175.0f;
-    [SerializeField] private float mouseXSensitivity = 5.0f;
-    [SerializeField] private float mouseYSensitivity = 5.0f;
-    [SerializeField] private float scrollSensitivity = 0.01f;
+    [SerializeField] private float mouseXSensitivity = 0.5f;
+    [SerializeField] private float mouseYSensitivity = 0.5f;
+    [SerializeField] private float scrollSensitivity = 0.001f;
+    [SerializeField] private float offsetspeed = 0.05f;
     void LateUpdate()
     {
         if(target != null){
@@ -35,12 +36,24 @@ public class Camera_controller : MonoBehaviour
                 Touch touchZero = Input.GetTouch(0);
                 Touch touchOne = Input.GetTouch(1);
                 updateDistance(touchOne, touchZero);
+                updateOffset(touchZero, touchOne);
             }
 
+            Debug.Log(offset);
             var lookAtPos = offset;
             updatePosition(lookAtPos);
             transform.LookAt(lookAtPos);
         }
+    }
+
+    void updateOffset(Touch zero, Touch one)
+    {
+        Vector2 DeltaCenter = (zero.deltaPosition + one.deltaPosition) / 2;
+        Vector3 direction = Quaternion.Euler(transform.localEulerAngles.x, 0, 0) * new Vector3(DeltaCenter.x, 0, 0) * (-1) * Time.deltaTime * offsetspeed;
+        direction = transform.TransformDirection(direction);
+        offset = new Vector3(offset.x + direction.x, offset.y + direction.y, offset.z + direction.z);
+        direction = Quaternion.Euler(transform.localEulerAngles.x, 0, 0) * new Vector3(0, DeltaCenter.y ,0) * (-1) * Time.deltaTime * offsetspeed;
+        offset = new Vector3(offset.x + direction.x, offset.y + direction.y, offset.z + direction.z);
     }
 
     void updateAngle(float x, float y)

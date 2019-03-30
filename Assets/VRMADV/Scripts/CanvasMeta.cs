@@ -19,6 +19,7 @@ public class CanvasMeta : MonoBehaviour
     public GameObject LICENCE_URL;
     void Awake()
     {
+        transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
 
         VRMMetaObject Meta = gameObject.GetComponent<VRMMeta>().Meta;
         if(Meta.Thumbnail != null){
