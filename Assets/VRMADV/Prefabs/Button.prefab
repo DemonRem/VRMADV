@@ -101,20 +101,23 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
+    m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 3409936566508384745}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -145,6 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas_prefab: {fileID: 9216297838087305522, guid: 59c3ab3189a0f494194dcf3537aa8036,
     type: 3}
+  VRMPathObject: {fileID: 0}
 --- !u!114 &2753273861672435889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,3 +174,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba9c1142ba269a42a59ff7e37682e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Path: 
