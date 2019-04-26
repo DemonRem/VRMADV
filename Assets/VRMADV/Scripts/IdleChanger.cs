@@ -31,26 +31,26 @@ public class IdleChanger : MonoBehaviour
 
 	void OnGUI()
 	{	
-		GUI.Box(new Rect(100 , 45 ,120 , 440), "");
-		if(GUI.Button(new Rect(110 , 60 ,100, 40), "Jab"))
+		GUI.Box(new Rect(100 , 45 ,120 , 830), "");
+		if(GUI.Button(new Rect(110 , 60 ,100, 80), "Jab"))
 			anim.SetBool ("Jab", true);
-		if(GUI.Button(new Rect(110 , 100 ,100, 40), "Hikick"))
+		if(GUI.Button(new Rect(110 , 140 ,100, 80), "Hikick"))
 			anim.SetBool ("Hikick", true);
-		if(GUI.Button(new Rect(110 , 140 ,100, 40), "Spinkick"))
+		if(GUI.Button(new Rect(110 , 220 ,100, 80), "Spinkick"))
 			anim.SetBool ("Spinkick", true);
-		if(GUI.Button(new Rect(110 , 180 ,100, 40), "Rising_P"))
+		if(GUI.Button(new Rect(110 , 300 ,100, 80), "Rising_P"))
 			anim.SetBool ("Rising_P", true);
-		if(GUI.Button(new Rect(110 , 220 ,100, 40), "Headspring"))
+		if(GUI.Button(new Rect(110 , 380 ,100, 80), "Headspring"))
 			anim.SetBool ("Headspring", true);
-		if(GUI.Button(new Rect(110 , 260 ,100, 40), "Land"))
+		if(GUI.Button(new Rect(110 , 460 ,100, 80), "Land"))
 			anim.SetBool ("Land", true);
-		if(GUI.Button(new Rect(110 , 300 ,100, 40), "ScrewKick"))
+		if(GUI.Button(new Rect(110 , 540 ,100, 80), "ScrewKick"))
 			anim.SetBool ("ScrewK", true);
-		if(GUI.Button(new Rect(110 , 340 ,100, 40), "DamageDown"))
+		if(GUI.Button(new Rect(110 , 620 ,100, 80), "DamageDown"))
 			anim.SetBool ("DamageDown", true);
-		if(GUI.Button(new Rect(110 , 380 ,100, 40), "Run"))
+		if(GUI.Button(new Rect(110 , 700 ,100, 80), "Run"))
 			anim.SetBool ("Run", true);
-		if(GUI.Button(new Rect(110 , 420 ,100, 40), "Run_end"))
+		if(GUI.Button(new Rect(110 , 780 ,100, 80), "Run_end"))
 			anim.SetBool ("Run", false);
 
 ;

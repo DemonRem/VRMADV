@@ -8,6 +8,7 @@ using UniRx.Async;
 public class VRM_controller : MonoBehaviour
 {
     public GameObject obj;
+    public GameObject button;
 
     async void Start()
     {
@@ -26,8 +27,11 @@ public class VRM_controller : MonoBehaviour
 
         go.transform.position = new Vector3(0, -1, 0);
         go.AddComponent<IdleChanger>();
+        go.AddComponent<Blinker>();
         Camera_controller CameraController = obj.GetComponent<Camera_controller>();
         Animator humanoid = go.GetComponent<Animator>();
+        button.GetComponent<Button_controller>().VRM = go;
+        humanoid.applyRootMotion = true;
         humanoid.runtimeAnimatorController = (RuntimeAnimatorController)RuntimeAnimatorController.Instantiate(Resources.Load ("AnimController"));
         CameraController.offset = humanoid.GetBoneTransform(HumanBodyBones.Spine).position;
         CameraController.target = go;
