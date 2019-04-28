@@ -1,4 +1,5 @@
 # VRM Android Viewer
+![move](mov.gif)
 お好みのVRMファイルを読み込んでAndroidで表示させることが出来ます。
 
 デフォルトで3つのアバターが入っています。
