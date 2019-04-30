@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using VRM;
 
 public class Button_controller : MonoBehaviour
 {
@@ -13,5 +15,12 @@ public class Button_controller : MonoBehaviour
         camera.polarAngle = 90.0f;
         camera.azimuthalAngle = 90.0f;
         camera.offset = new Vector3(0, 0, 0);
+    }
+
+    public void BackButton()
+    {
+        Object.Destroy(VRM);
+        Resources.UnloadUnusedAssets();
+        SceneManager.LoadScene("read");
     }
 }
